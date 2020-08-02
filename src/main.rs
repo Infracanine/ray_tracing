@@ -10,10 +10,10 @@ fn main(){
     let mut image = File::create("image.ppm").expect("Failed to create image file!");
 
     // Testing code goes here
-    // let test = vec3::Vec3{x:1.0,y:2.0,z:3.0};
+    let test = vec3::Vec3{x:1.0,y:2.0,z:3.0};
     // let test2 = vec3::Vec3{x:1.0,y:2.0,z:3.0};               
     // let test3 = test / 2.0;
-    //println!("test vector is now: {:?}",test3);
+    println!("test vector is now: {}",test);
 
 
     // Render

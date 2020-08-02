@@ -1,6 +1,6 @@
 use std::ops;
+use std::fmt;
 
-#[derive(Debug)]
 pub struct Vec3{
     pub x: f64,
     pub y: f64,
@@ -68,7 +68,14 @@ impl ops::Div<f64> for Vec3{
     }
 }
 
+impl fmt::Display for Vec3{
+    fn fmt(&self,f: &mut fmt::Formatter) -> fmt::Result{
+        write!(f,"{} {} {}",self.x,self.y,self.z)
+    }
+}
+
 // Utility Functions
+
 
 pub fn zeroes() -> Vec3{
     Vec3{x: 0.0,y: 0.0, z: 0.0}
