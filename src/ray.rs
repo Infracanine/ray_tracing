@@ -17,11 +17,11 @@ impl Ray{
 
     // don't necessarily like how this is done and suggests maybe need to rethink how i've implemented my multi,addition, etc.
     pub fn at(&self,t: f64) -> vec3::Point3{
-        vec3::clone(self.origin())+ (vec3::clone(self.direction()) * t)
+        self.origin() + &(self.direction() * t)
     }
 }
 
-//
+// Casts a ray and returns colour
 pub fn ray_colour(r: Ray) -> vec3::Colour{
     let unit_direction : vec3::Vec3 =  vec3::unit_vector(r.direction());
     let t = 0.5 * (unit_direction.y + 1.0);
