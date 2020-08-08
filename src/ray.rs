@@ -21,9 +21,3 @@ impl Ray{
     }
 }
 
-// Casts a ray and returns colour
-pub fn ray_colour(r: Ray) -> vec3::Colour{
-    let unit_direction : vec3::Vec3 =  vec3::unit_vector(r.direction());
-    let t = 0.5 * (unit_direction.y + 1.0);
-    ((1.0 - t) * vec3::Colour{x:1.0,y:1.0,z:1.0}) + (t * vec3::Colour{x:0.5,y:0.7,z:1.0})
-}
