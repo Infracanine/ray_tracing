@@ -20,6 +20,7 @@ fn main(){
     let horizontal : vec3::Vec3 = vec3::new(viewport_width,0.0,0.0);
     let vertical : vec3::Vec3 = vec3::new(0.0,viewport_height,0.0);
     let bottom_left_corner = &origin - &(vec3::clone(&horizontal)/2.0) - vec3::clone(&vertical)/2.0 - vec3::new(0.0,0.0,focal_length);
+
     // Render 
     image.write(format!("P3\n{} {}\n255\n", IMAGE_WIDTH, IMAGE_HEIGHT).as_bytes()).expect("Failed to write PNN prelude");
     for j in (0..IMAGE_HEIGHT).rev(){
@@ -40,7 +41,7 @@ fn main(){
 }
 
 
-fn hit_sphere(center : &vec3::Point3,radius : f64, ray : &ray::Ray) -> bool{
+fn hit_sphere_bool(center : &vec3::Point3,radius : f64, ray : &ray::Ray) -> bool{
     let oc = ray.origin() - center;
     let a = vec3::dot(ray.direction(),ray.direction());
     let b = 2.0 * vec3::dot(&oc,ray.direction());
@@ -49,12 +50,31 @@ fn hit_sphere(center : &vec3::Point3,radius : f64, ray : &ray::Ray) -> bool{
     discriminant > 0.0
 }
 
+fn hit_sphere(center : &vec3::Point3,radius : f64, ray : &ray::Ray) -> f64{
+    let oc = ray.origin() - center;
+    let a = vec3::dot(ray.direction(),ray.direction());
+    let b = 2.0 * vec3::dot(&oc,ray.direction());
+    let c = vec3::dot(&oc,&oc) - (radius * radius);
+    let discriminant = b*b - 4.0*a*c;
+    if discriminant < 0.0 { 
+        -1.0
+    }
+    else {
+        (-b - discriminant.sqrt()) / (2.0 * a) 
+    }
+
+}
+
+
 // Casts a ray and returns colour
 fn ray_colour(ray: ray::Ray) -> vec3::Colour{
-    let out = if hit_sphere(&vec3::Point3{x:0.0,y:0.0,z:-1.0},0.5,&ray){
-        vec3::Colour{x:1.0,y:1.0,z:1.0}
-    } else {
-
+    let t = hit_sphere(&vec3::Point3{x:0.0,y:0.0,z:-1.0},0.5,&ray);
+    let out = 
+    if t > 0.0 { 
+        let n = vec3::unit_vector(&(ray.at(t) - vec3::new(0.0,0.0,-1.0)));
+        0.5*vec3::Colour{x:n.x + 1.0, y: n.y+1.0, z: n.z+1.0}
+    } 
+    else {
         let unit_direction : vec3::Vec3 =  vec3::unit_vector(ray.direction());
         let t = 0.5 * (unit_direction.y + 1.0);
         ((1.0 - t) * vec3::Colour{x:1.0,y:1.0,z:1.0}) + (t * vec3::Colour{x:0.5,y:0.7,z:1.0})
